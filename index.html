@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #renderCanvas {
+            width: 800px;
+            height: 800px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+
+    <script type="module">
+        import "/node_modules/crs-binding/crs-binding.js"
+        import "/node_modules/crs-process-api/crs-process-api.js"
+        import "/src/crs-graphics-system.js";
+
+        const canvas = await crs.call("gfx", "create", { element: "canvas" })
+        await crs.call("gfx", "add_scene", { element: canvas });
+        await crs.call("gfx", "add_camera", { element: canvas });
+        await crs.call("gfx", "add_light", { element: canvas })
+
+        await crs.call("gfx", "create_mesh", {
+            element: canvas,
+            type: "Sphere",
+            options: { segments: 16, diameter: 2, sideOrientation: BABYLON.Mesh.FRONTSIDE },
+            y: 1
+        })
+
+        await crs.call("gfx", "create_mesh", {
+            element: canvas,
+            type: "Ground",
+            options: { width: 6, height: 6, subdivisions: 2, updatable: false }
+        })
+
+        await crs.call("gfx", "set_render_loop", { element: canvas })
+    </script>
+</body>
+</html>
